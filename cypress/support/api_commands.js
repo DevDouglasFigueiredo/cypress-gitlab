@@ -13,6 +13,36 @@ Cypress.Commands.add('api_createProject', project => {
     })
 })
 
+Cypress.Commands.add('api_createIssue', issue => {
+    cy.api_createProject(issue.project)
+    .then(response => {
+      cy.request({
+        method: 'POST',
+        url: `/api/v4/projects/${response.body.id}/issues`,
+        body: {
+          title: issue.title,
+          description: issue.description
+        },
+        headers: { Authorization: accessToken },
+      })
+  })
+})
+
+Cypress.Commands.add('api_createLabel', label => {
+    cy.api_createProject(label.project)
+    .then(response => {
+      cy.request({
+        method: 'POST',
+        url: `/api/v4/projects/${response.body.id}/labels`,
+        body: {
+          name: label.name,
+          color: label.color
+        },
+        headers: { Authorization: accessToken },
+      })
+  })
+})
+
 Cypress.Commands.add('api_getAllProjects', () => {
     cy.request({
         method: 'GET',
